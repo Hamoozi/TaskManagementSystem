@@ -1,11 +1,14 @@
 package system;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
 import system.Task.Priority;
 import system.Task.TaskStatus;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
@@ -21,7 +24,7 @@ public class TaskUI {
         notis = new ArrayList<>();
     }
 
-    public void displayMenu() {
+    public void displayMenu() throws ParseException {
         System.out.println("==== Task Management System ====");
         System.out.println("1. View Tasks");
         System.out.println("2. Create Task");
@@ -78,13 +81,21 @@ public class TaskUI {
         }
     }
     
-    public void displayNotifications() {
+    public void displayNotifications() throws ParseException {
         System.out.println("==== Notifications ====");
         for (Notification notification : notis) {
-            System.out.println("Message: " + notification.getMessage());
-            System.out.println("Timestamp: " + notification.getTimestamp());
-            System.out.println("Associated Task: " + notification.getAssociatedTask().getName());
-            System.out.println();
+        	
+        	LocalDate dueDateTime = notification.getAssociatedTask().getDueDate();
+        	
+        	
+        	if (notification.getTimestamp().isAfter(dueDateTime)) {
+                System.out.println("Message: " + notification.getMessage());
+                System.out.println("Timestamp: " + notification.getTimestamp());
+                System.out.println("Associated Task: " + notification.getAssociatedTask().getName());
+                System.out.println();        		
+        	}
+        	
+
         }
     }
 
@@ -110,6 +121,9 @@ public class TaskUI {
         System.out.print("Enter task priority: ");
         String priorityStr = scanner.nextLine();
         Priority priority = Priority.valueOf(priorityStr.toUpperCase());
+        
+        System.out.println("Enter notification message: ");
+        String message = scanner.nextLine();
 
         // Create a new task
         Task newTask = new Task(name, description, dueDate, status, priority, assignedUser);
@@ -117,12 +131,14 @@ public class TaskUI {
         // Add the task to the task manager
         taskManager.addTask(newTask);
         
-        Notification notification = new Notification(name, LocalDateTime.now(), newTask);
+        Notification notification = new Notification(message, LocalDate.now(), newTask);
         
         notis.add(notification);
         
         System.out.println("Task created successfully!");
         System.out.println();
+        
+       
     }
 
     public void updateTask() {
@@ -139,7 +155,7 @@ public class TaskUI {
         // Display success message or error message
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         TaskUI taskUI = new TaskUI();
         taskUI.displayMenu();
     }

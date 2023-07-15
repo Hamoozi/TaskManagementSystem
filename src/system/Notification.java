@@ -1,13 +1,14 @@
 package system;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Notification {
     private String message;
-    private LocalDateTime timestamp;
+    private LocalDate timestamp;
     private Task associatedTask;
 
-    public Notification(String message, LocalDateTime timestamp, Task associatedTask) {
+    public Notification(String message, LocalDate timestamp, Task associatedTask) {
         this.message = message;
         this.timestamp = timestamp;
         this.associatedTask = associatedTask;
@@ -22,11 +23,11 @@ public class Notification {
         this.message = message;
     }
 
-    public LocalDateTime getTimestamp() {
+    public LocalDate getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(LocalDate timestamp) {
         this.timestamp = timestamp;
     }
 
